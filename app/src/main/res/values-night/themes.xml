@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.DiscoveryParkMap" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#00853E</item>
+        <item name="colorPrimaryDark">#007336</item>
+        <item name="colorAccent">#00853E</item>
+    </style>
+</resources>

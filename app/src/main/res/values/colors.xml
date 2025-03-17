@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="unt_green">#00853E</color>
+    <color name="unt_green_dark">#007336</color>
+    <color name="unt_white">#FFFFFF</color>
+    <color name="unt_black">#231F20</color>
+    <color name="unt_gray">#717073</color>
+    <color name="unt_light_gray">#EEEEEE</color>
+</resources>

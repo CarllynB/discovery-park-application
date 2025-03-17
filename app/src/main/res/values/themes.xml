@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme definition -->
+    <style name="Base.Theme.DiscoveryParkMap" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#00853E</item>
+        <item name="colorPrimaryDark">#007336</item>
+        <item name="colorAccent">#00853E</item>
+    </style>
+
+    <!-- Main theme that extends the base theme -->
+    <style name="Theme.DiscoveryParkMap" parent="Base.Theme.DiscoveryParkMap">
+        <!-- No additional overrides needed for now -->
+    </style>
+</resources>
