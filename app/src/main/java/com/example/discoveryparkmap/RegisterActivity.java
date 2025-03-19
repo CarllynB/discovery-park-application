@@ -18,11 +18,15 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText confirmPasswordInput;
     private Button registerButton;
     private TextView loginText;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Initialize database helper
+        databaseHelper = DatabaseHelper.getInstance(this);
 
         // Initialize UI components
         fullNameInput = findViewById(R.id.fullNameInput);
@@ -77,10 +81,24 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Implement actual registration logic here
-        // For now, we'll just show a success message and return to login
+        // Check if username already exists
+        if (databaseHelper.isUsernameTaken(username)) {
+            Toast.makeText(this, "Username already taken. Please choose another.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_SHORT).show();
-        finish();
+        // Add user to database
+        long userId = databaseHelper.addUser(fullName, email, username, password);
+        if (userId != -1) {
+            Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_SHORT).show();
+
+            // Optional: Automatically log in the user and navigate to classes
+            // saveLoginSession(userId, username);
+            // navigateToClassesActivity();
+
+            finish(); // Return to login screen
+        } else {
+            Toast.makeText(this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

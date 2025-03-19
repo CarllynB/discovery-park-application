@@ -3,14 +3,18 @@ package com.example.discoveryparkmap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,28 +25,38 @@ public class ClassesActivity extends AppCompatActivity {
     private RecyclerView classesRecyclerView;
     private Button addClassButton;
     private Button backButton;
+    private Button logoutButton;
     private ArrayList<ClassInfo> classList;
     private ClassAdapter adapter;
+    private DatabaseHelper databaseHelper;
+    private int userId;
+    private String username;
+    private static final String PREF_NAME = "UserSession";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classes);
 
+        // Initialize database helper
+        databaseHelper = DatabaseHelper.getInstance(this);
+
         // Initialize UI components
         classesRecyclerView = findViewById(R.id.classesRecyclerView);
         addClassButton = findViewById(R.id.addClassButton);
         backButton = findViewById(R.id.backButton);
+        logoutButton = findViewById(R.id.logoutButton); // Make sure this exists in your layout
 
-        // Get username from intent
-        String username = getIntent().getStringExtra("USERNAME");
+        // Get user info from intent
+        userId = getIntent().getIntExtra("USER_ID", -1);
+        username = getIntent().getStringExtra("USERNAME");
 
         // Set the title with username
         TextView titleText = findViewById(R.id.titleText);
         titleText.setText(username + "'s Classes");
 
-        // Load demo classes
-        loadDemoClasses();
+        // Load classes from database
+        loadClassesFromDatabase();
 
         // Set up RecyclerView
         adapter = new ClassAdapter(classList);
@@ -54,14 +68,34 @@ public class ClassesActivity extends AppCompatActivity {
             showAddClassDialog();
         });
 
-        // Set up back button
+        // Set up back button - navigate to map instead of finishing
         backButton.setOnClickListener(v -> {
-            // Navigate back to main activity
-            Intent mainIntent = new Intent(ClassesActivity.this, MainActivity.class);
-            mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear the activity stack
-            startActivity(mainIntent);
-            finish(); // Close the current activity
+            // Navigate to map activity
+            Intent mapIntent = new Intent(ClassesActivity.this, MapActivity.class);
+            startActivity(mapIntent);
         });
+
+        // Set up logout button
+        if (logoutButton != null) {
+            logoutButton.setOnClickListener(v -> {
+                logout();
+            });
+        }
+    }
+
+    private void loadClassesFromDatabase() {
+        // If logged in, get classes from database
+        if (userId != -1) {
+            classList = new ArrayList<>(databaseHelper.getClassesForUser(userId));
+
+            // If no classes found, maybe it's an existing user from before database implementation
+            if (classList.isEmpty()) {
+                loadDemoClasses(); // Load demo classes as fallback
+            }
+        } else {
+            // Fallback to demo classes if not logged in or ID not found
+            loadDemoClasses();
+        }
     }
 
     private void loadDemoClasses() {
@@ -127,11 +161,23 @@ public class ClassesActivity extends AppCompatActivity {
                 Room room = new Room(roomNumber, floor, roomNumber.substring(0, 1), 0, 0, true);
                 ClassInfo newClass = new ClassInfo(classCode, className, room, days, startTime, endTime);
 
-                // Add to the list and update UI
-                classList.add(newClass);
-                adapter.notifyItemInserted(classList.size() - 1);
-
-                Toast.makeText(ClassesActivity.this, "Class added successfully", Toast.LENGTH_SHORT).show();
+                // Save to database if logged in
+                if (userId != -1) {
+                    long classId = databaseHelper.addClass(userId, newClass);
+                    if (classId != -1) {
+                        // Add to the list and update UI
+                        classList.add(newClass);
+                        adapter.notifyItemInserted(classList.size() - 1);
+                        Toast.makeText(ClassesActivity.this, "Class added successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ClassesActivity.this, "Error adding class to database", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Just add to list for guest users (won't be saved)
+                    classList.add(newClass);
+                    adapter.notifyItemInserted(classList.size() - 1);
+                    Toast.makeText(ClassesActivity.this, "Class added (not saved - guest mode)", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -143,6 +189,32 @@ public class ClassesActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    // Add logout method
+    private void logout() {
+        // Show confirmation dialog
+        new AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Clear session
+                        SharedPreferences preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.apply();
+
+                        // Return to login
+                        Intent loginIntent = new Intent(ClassesActivity.this, MainActivity.class);
+                        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(loginIntent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     // Class adapter for RecyclerView
@@ -194,5 +266,13 @@ public class ClassesActivity extends AppCompatActivity {
                 timeText = itemView.findViewById(R.id.timeText);
             }
         }
+    }
+
+    // Override back button to show logout confirmation
+    @Override
+    public void onBackPressed() {
+        // Navigate to map instead of back
+        Intent mapIntent = new Intent(ClassesActivity.this, MapActivity.class);
+        startActivity(mapIntent);
     }
 }
