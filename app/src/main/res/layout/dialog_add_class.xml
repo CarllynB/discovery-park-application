@@ -1,55 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/classCodeInput"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Class Code (e.g., CSCE 3444)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <EditText
-        android:id="@+id/classNameInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Class Name (e.g., Software Engineering)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/classCodeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Class Code (e.g., CSCE 3444)"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/roomNumberInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Room Number (e.g., B155)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/classNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Class Name (e.g., Software Engineering)"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/daysInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Days (e.g., MW for Monday/Wednesday)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/roomNumberInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Room Number (e.g., B155)"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/startTimeInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Start Time (e.g., 10:00 AM)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        <EditText
+            android:id="@+id/daysInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Days (e.g., MW)"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/endTimeInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="End Time (e.g., 11:20 AM)"
-        android:inputType="text" />
+        <EditText
+            android:id="@+id/startTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Start Time (e.g., 10:00 AM)"
+            android:inputType="text"
+            android:layout_marginBottom="8dp" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/endTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="End Time (e.g., 11:20 AM)"
+            android:inputType="text"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 🔥 New Recitation/Lab Section -->
+        <CheckBox
+            android:id="@+id/recitationCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Has Recitation or Lab?"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/recitationRoomInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recitation Room"
+            android:inputType="text"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/recitationStartTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recitation Start Time"
+            android:inputType="text"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/recitationEndTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recitation End Time"
+            android:inputType="text"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 🔥 New Notes Section -->
+        <EditText
+            android:id="@+id/notesInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Notes (Optional)"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:gravity="top" />
+
+    </LinearLayout>
+</ScrollView>

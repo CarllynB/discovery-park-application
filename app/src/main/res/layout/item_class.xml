@@ -45,6 +45,25 @@
             android:text="MW 10:00 AM - 11:20 AM" />
 
         <TextView
+            android:id="@+id/recitationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:visibility="gone"
+            android:layout_marginTop="6dp" />
+
+        <!-- 🔥 New Notes Info (Initially hidden) -->
+        <TextView
+            android:id="@+id/notesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
+            android:layout_marginTop="4dp" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tap to view on map"
@@ -53,5 +72,15 @@
             android:textColor="@color/unt_gray"
             android:gravity="end"
             android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
